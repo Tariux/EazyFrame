@@ -1,6 +1,12 @@
+const { HTML } = require("../../core/render/HTML")
+
 class DPackge { 
     constructor() {
-        console.log('DPackge Loaded!');
+    }
+    
+    async response() {
+        const page = await HTML.load('index')
+        return page
     }
 }
 

@@ -146,7 +146,7 @@ class App {
    * @param {http.IncomingMessage} request - The incoming HTTP request.
    * @param {http.ServerResponse} response - The HTTP response.
    */
-  run(request, response) {
+  async run(request, response) {
     this.lastRequest = request;
     this.lastResponse = response;
     const routes = this.router.getRoutes();
@@ -160,10 +160,9 @@ class App {
     }
 
     const route = routes[request.url];
-
     if (!route.module || !this.#build[route.module]) {
       response.writeHead(400, {
-        'Content-Type': 'text/plain',
+        'Content-Type': (route.responseType) ? route.responseType : 'text/plain',
       });
       response.end('Module not found');
       return;
@@ -173,9 +172,9 @@ class App {
 
     const moduleInstance = build.module;
     response.writeHead(200, {
-      'Content-Type': 'text/plain',
+      'Content-Type': (route.responseType) ? route.responseType : 'text/plain',
     });
-    response.end(moduleInstance.response());
+    response.end(await moduleInstance.response());
   }
 
   /**

@@ -2,6 +2,7 @@ const { logThe } = require('../utility/Logger');
 const App = require('./App');
 const Router = require('./Router');
 const http = require('http');
+const fs = require('fs');
 
 /**
  * Core class responsible for bootstrapping the application.
@@ -14,6 +15,18 @@ class Core {
     logThe('Core Loaded!');
     this.router = new Router();
     this.app = new App(this.router);
+    this.mimeTypes = {
+      // Start of Selection
+      html: 'text/html',
+      jpeg: 'image/jpeg',
+      jpg: 'image/jpeg',
+      png: 'image/png',
+      js: 'text/javascript',
+      css: 'text/css',
+      woff: 'font/woff',
+      woff2: 'font/woff2',
+      ttf: 'font/ttf',
+    };
   }
 
   /**
@@ -31,8 +44,26 @@ class Core {
      * @param {http.ServerResponse} res - The HTTP response.
      */
     const handleRequest = (req, res) => {
-      logThe(req.url + ' ' + req.method , 'New Request!');
-      this.app.run(req, res);
+      if (handleMimetype(req, res) === false) {
+        logThe(req.url + ' ' + req.method, 'New Request!');
+        this.app.run(req, res);
+      }
+    };
+
+    const handleMimetype = (req, res) => {
+      var filesDependencies = req.url.match(
+        /\.js|\.css|\.jpg|\.png|\.woff2|\.ttf|\.woff/
+      );
+      if (filesDependencies) {
+        var extension =
+          this.mimeTypes[filesDependencies[0].toString().split('.')[1]];
+        res.writeHead(200, { 'Content-Type': extension });
+        fs.createReadStream(__dirname + '/../theme/' + req.url).pipe(res);
+
+        return true
+      } else {
+        return false
+      }
     };
 
     this.server.on('request', handleRequest);
@@ -41,7 +72,7 @@ class Core {
      * Event handler for when the server is listening.
      */
     this.server.listen(this.port, '127.0.0.1', () => {
-      logThe('Server running' , 'in http://127.0.0.1:' + this.port , '▣');
+      logThe('Server running', 'in http://127.0.0.1:' + this.port);
     });
   }
 }
