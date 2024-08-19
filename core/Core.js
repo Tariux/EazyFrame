@@ -1,33 +1,48 @@
-const App = require("./App");
-const Router = require("./Router");
+const App = require('./App');
+const Router = require('./Router');
 const http = require('http');
 
+/**
+ * Core class responsible for bootstrapping the application.
+ */
 class Core {
-  //
+  /**
+   * Constructor method that initializes the Core instance.
+   */
   constructor() {
     console.log('Core Loaded!');
     this.router = new Router();
     this.app = new App(this.router);
   }
+
+  /**
+   * Method that starts the HTTP server and listens for incoming requests.
+   * @param {number} port - The port number to listen on.
+   */
   listen(port) {
     this.port = port;
 
     this.server = http.createServer((req, res) => {});
 
+    /**
+     * Handler function for incoming HTTP requests.
+     * @param {http.IncomingMessage} req - The incoming HTTP request.
+     * @param {http.ServerResponse} res - The HTTP response.
+     */
     const handleRequest = (req, res) => {
       console.log('Server Requested!');
       this.app.run(req, res);
-      // this.router.parseRoute(req);
-      // this.router.autoRoute(res);
     };
 
     this.server.on('request', handleRequest);
 
+    /**
+     * Event handler for when the server is listening.
+     */
     this.server.listen(this.port, '127.0.0.1', () => {
       console.log('Server running at http://127.0.0.1:' + this.port);
     });
   }
 }
 
-
-module.exports = Core
+module.exports = Core;

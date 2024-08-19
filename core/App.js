@@ -1,152 +1,193 @@
-
 const routes = require('../app/routes');
 const loader = require('../app/loader');
 
+/**
+ * App class responsible for bootstrapping the application.
+ */
 class App {
-    #controllers = [];
-    #packages = [];
-    #couple = [];
-    build = [];
-    constructor(router) {
-      console.log('App Loaded!');
-      this.router = router;
-      this.init();
-  
-      this.load();
-      console.log('this.build', this.build);
+  /**
+   * Private properties to store the controllers, packages, and couples.
+   * @private
+   */
+  #controllers = [];
+  #packages = [];
+  #couple = [];
+  #build = []
+  /**
+   * Constructor method that initializes the App instance.
+   * @param {Router} router - The router instance.
+   */
+  constructor(router) {
+    console.log('App Loaded!');
+    this.router = router;
+    this.init();
+
+    this.load();
+    console.log('this.#build', this.#build);
+  }
+
+  /**
+   * Method to initialize the app.
+   */
+  init() {
+    routes(this.router);
+    loader(this);
+  }
+
+  /**
+   * Method to load a controller.
+   * @param {string} key - The key for the controller.
+   * @param {Object} controller - The controller module.
+   */
+  loadController(key, controller) {
+    this.#controllers[key] = {
+      id: this.generateRandomString(),
+      key,
+      module: controller,
+    };
+  }
+
+  /**
+   * Method to load a package.
+   * @param {string} key - The key for the package.
+   * @param {Object} pack - The package module.
+   */
+  loadPackage(key, pack) {
+    this.#packages[key] = {
+      id: this.generateRandomString(),
+      key,
+      module: pack,
+    };
+  }
+
+  /**
+   * Method to inject a master and slave into the app.
+   * @param {string} first - The key for the master.
+   * @param {string} second - The key for the slave.
+   */
+  inject(first, second) {
+    let master,
+      slave = false;
+    if (this.#controllers[first]) {
+      master = this.#controllers[first];
+    } else if (this.#packages[first]) {
+      master = this.#packages[first];
     }
-  
-    init() {
-      routes(this.router);
-      loader(this)
+
+    if (this.#controllers[second]) {
+      slave = this.#controllers[second];
+    } else if (this.#packages[second]) {
+      slave = this.#packages[second];
     }
-    loadController(key, controller) {
-      this.#controllers[key] = {
+
+    if (!master || !slave) {
+      throw new Error('WTF BRO?');
+    }
+
+    if (this.#couple[first]) {
+      this.#couple[first].salves = [...this.#couple[first].salves, slave];
+    } else {
+      this.#couple[first] = {
         id: this.generateRandomString(),
-        key,
-        module: controller,
+        name: first,
+        master,
+        salves: [slave],
       };
-    }
-  
-    loadPackage(key, pack) {
-      this.#packages[key] = {
-        id: this.generateRandomString(),
-        key,
-        module: pack,
-      };
-    }
-  
-    inject(first, second) {
-      let master,
-        slave = false;
-      if (this.#controllers[first]) {
-        master = this.#controllers[first];
-      } else if (this.#packages[first]) {
-        master = this.#packages[first];
-      }
-  
-      if (this.#controllers[second]) {
-        slave = this.#controllers[second];
-      } else if (this.#packages[second]) {
-        slave = this.#packages[second];
-      }
-  
-      if (!master || !slave) {
-        throw new Error('WTF BRO?');
-      }
-  
-      if (this.#couple[first]) {
-        this.#couple[first].salves = [...this.#couple[first].salves, slave];
-      } else {
-        this.#couple[first] = {
-          id: this.generateRandomString(),
-          name: first,
-          master,
-          salves: [slave],
-        };
-      }
-    }
-  
-    load() {
-      const allRoutes = this.router.getRoutes();
-      for (
-        let bundleIndex = 0;
-        bundleIndex < Object.keys(this.#couple).length;
-        bundleIndex++
-      ) {
-        const bundle = Object.values(this.#couple)[bundleIndex];
-        const foundRoutes = [];
-        for (
-          let routeIndex = 0;
-          routeIndex < Object.keys(allRoutes).length;
-          routeIndex++
-        ) {
-          const route = Object.values(allRoutes)[routeIndex];
-          if (route.module === bundle.name) {
-            foundRoutes.push({
-              route: Object.keys(allRoutes)[routeIndex],
-              ...route,
-            });
-          }
-        }
-  
-        let deps = [];
-        bundle.salves.map((slave) => {
-          const slaveModule = require(slave.module);
-          const slaveModuleObject = new slaveModule();
-          deps[slave.key] = slaveModuleObject;
-        });
-        const module = require(bundle.master.module);
-        const moduleObject = new module(deps);
-  
-        this.build[bundle.name] = {
-          routes: foundRoutes,
-          module: moduleObject,
-        };
-      }
-    }
-    run(request, response) {
-      this.lastRequest = request;
-      this.lastResponse = response;
-      const routes = this.router.getRoutes();
-  
-      if (!request.url || !routes[request.url]) {
-        response.writeHead(404, {
-          'Content-Type': 'text/plain',
-        });
-        response.end('Route not found');
-        return;
-      }
-  
-      const route = routes[request.url];
-  
-      if (!route.module || !this.build[route.module]) {
-        response.writeHead(400, {
-          'Content-Type': 'text/plain',
-        });
-        response.end('Module not found');
-        return;
-      }
-  
-      const build = this.build[route.module];
-  
-      const moduleInstance = build.module;
-      response.writeHead(200, {
-        'Content-Type': 'text/plain',
-      });
-      response.end(moduleInstance.response());
-    }
-  
-    generateRandomString() {
-      const chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < 16; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return result;
     }
   }
 
+  /**
+   * Method to load the app.
+   */
+  load() {
+    const allRoutes = this.router.getRoutes();
+    for (
+      let bundleIndex = 0;
+      bundleIndex < Object.keys(this.#couple).length;
+      bundleIndex++
+    ) {
+      const bundle = Object.values(this.#couple)[bundleIndex];
+      const foundRoutes = [];
+      for (
+        let routeIndex = 0;
+        routeIndex < Object.keys(allRoutes).length;
+        routeIndex++
+      ) {
+        const route = Object.values(allRoutes)[routeIndex];
+        if (route.module === bundle.name) {
+          foundRoutes.push({
+            route: Object.keys(allRoutes)[routeIndex],
+            ...route,
+          });
+        }
+      }
 
-module.exports = App
+      let deps = [];
+      bundle.salves.map((slave) => {
+        const slaveModule = require(slave.module);
+        const slaveModuleObject = new slaveModule();
+        deps[slave.key] = slaveModuleObject;
+      });
+      const module = require(bundle.master.module);
+      const moduleObject = new module(deps);
+
+      this.#build[bundle.name] = {
+        routes: foundRoutes,
+        module: moduleObject,
+      };
+    }
+  }
+
+  /**
+   * Method to run the app.
+   * @param {http.IncomingMessage} request - The incoming HTTP request.
+   * @param {http.ServerResponse} response - The HTTP response.
+   */
+  run(request, response) {
+    this.lastRequest = request;
+    this.lastResponse = response;
+    const routes = this.router.getRoutes();
+
+    if (!request.url || !routes[request.url]) {
+      response.writeHead(404, {
+        'Content-Type': 'text/plain',
+      });
+      response.end('Route not found');
+      return;
+    }
+
+    const route = routes[request.url];
+
+    if (!route.module || !this.#build[route.module]) {
+      response.writeHead(400, {
+        'Content-Type': 'text/plain',
+      });
+      response.end('Module not found');
+      return;
+    }
+
+    const build = this.#build[route.module];
+
+    const moduleInstance = build.module;
+    response.writeHead(200, {
+      'Content-Type': 'text/plain',
+    });
+    response.end(moduleInstance.response());
+  }
+
+  /**
+   * Method to generate a random string.
+   * @returns {string} A random string.
+   */
+  generateRandomString() {
+    const chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 16; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+}
+
+module.exports = App;
