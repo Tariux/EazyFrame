@@ -174,6 +174,7 @@ class App {
     response.writeHead(200, {
       'Content-Type': (route.responseType) ? route.responseType : 'text/plain',
     });
+
     response.end(await moduleInstance.response());
   }
 
