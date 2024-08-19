@@ -1,5 +1,6 @@
 const routes = require('../app/routes');
 const loader = require('../app/loader');
+const { logThe } = require('../utility/Logger');
 
 /**
  * App class responsible for bootstrapping the application.
@@ -12,18 +13,16 @@ class App {
   #controllers = [];
   #packages = [];
   #couple = [];
-  #build = []
+  #build = [];
   /**
    * Constructor method that initializes the App instance.
    * @param {Router} router - The router instance.
    */
   constructor(router) {
-    console.log('App Loaded!');
     this.router = router;
     this.init();
 
     this.load();
-    console.log('this.#build', this.#build);
   }
 
   /**
@@ -100,6 +99,7 @@ class App {
    * Method to load the app.
    */
   load() {
+    logThe('Loading app started');
     const allRoutes = this.router.getRoutes();
     for (
       let bundleIndex = 0;
@@ -107,6 +107,7 @@ class App {
       bundleIndex++
     ) {
       const bundle = Object.values(this.#couple)[bundleIndex];
+
       const foundRoutes = [];
       for (
         let routeIndex = 0;
@@ -127,9 +128,11 @@ class App {
         const slaveModule = require(slave.module);
         const slaveModuleObject = new slaveModule();
         deps[slave.key] = slaveModuleObject;
+        logThe(`"${slave.key}" controller loaded!`);
       });
       const module = require(bundle.master.module);
       const moduleObject = new module(deps);
+      logThe(`"${bundle.name}" package loaded!`);
 
       this.#build[bundle.name] = {
         routes: foundRoutes,

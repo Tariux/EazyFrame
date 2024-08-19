@@ -1,3 +1,5 @@
+const { logThe } = require("../utility/Logger");
+
 /**
  * Router class responsible for managing routes and handling requests.
  */
@@ -12,7 +14,7 @@ class Router {
    * Constructor method that initializes the Router instance.
    */
   constructor() {
-    console.log('Router Loaded!');
+    logThe('Router Loaded!');
     this.#routes = [];
   }
 

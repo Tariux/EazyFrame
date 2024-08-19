@@ -1,6 +1,5 @@
 class BPackage { 
     constructor() {
-        console.log('BPackage Loaded!');
     }
 
     method() {

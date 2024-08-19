@@ -1,3 +1,4 @@
+const { logThe } = require('../utility/Logger');
 const App = require('./App');
 const Router = require('./Router');
 const http = require('http');
@@ -10,7 +11,7 @@ class Core {
    * Constructor method that initializes the Core instance.
    */
   constructor() {
-    console.log('Core Loaded!');
+    logThe('Core Loaded!');
     this.router = new Router();
     this.app = new App(this.router);
   }
@@ -30,7 +31,7 @@ class Core {
      * @param {http.ServerResponse} res - The HTTP response.
      */
     const handleRequest = (req, res) => {
-      console.log('Server Requested!');
+      logThe(req.url + ' ' + req.method , 'New Request!');
       this.app.run(req, res);
     };
 
@@ -40,7 +41,7 @@ class Core {
      * Event handler for when the server is listening.
      */
     this.server.listen(this.port, '127.0.0.1', () => {
-      console.log('Server running at http://127.0.0.1:' + this.port);
+      logThe('Server running' , 'in http://127.0.0.1:' + this.port , '▣');
     });
   }
 }

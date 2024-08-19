@@ -1,6 +1,5 @@
 class APackage { 
     constructor(deps) {
-        console.log('APackage Loaded!');
         this.deps = deps
     }
 
