@@ -314,7 +314,8 @@ Header Style
 
 .header-area .main-nav {
   background: transparent;
-  display: flex
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .header-area .main-nav .logo {
@@ -330,9 +331,8 @@ Header Style
   text-transform: uppercase;
   color: #fff;
   font-weight: 600;
-  margin-right: 20px;
-  padding-right: 20px;
-  border-right: 1px solid rgba(250, 250, 250, 0.3);
+  margin-left: 20px;
+  padding-left: 20px;
 }
 
 .background-header .main-nav .logo,
@@ -372,7 +372,7 @@ Header Style
   border-radius: 0px 0px 25px 25px;
   flex-basis: 100%;
   margin-right: 0px;
-  justify-content: right;
+  justify-content: center;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
@@ -1905,4 +1905,29 @@ body {
   .fun-facts:before {
     width: 95%;
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+---------------------------------------------
+@Override Style
+--------------------------------------------- 
+*/
+.header-text {
+  direction: rtl;
+}
+.logo {
+
 }
