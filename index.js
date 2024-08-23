@@ -1,3 +1,4 @@
 const Core = require('./core/Core');
 
-new Core().listen(3030);
+const launcher = new Core();
+launcher.listen(3030);

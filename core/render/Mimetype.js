@@ -1,7 +1,7 @@
 const { readFileSync, existsSync, statSync } = require('fs');
-const { minifyCSS } = require('./utility');
 const { History } = require('../../storage/history');
 const { logThe } = require('../../utility/Logger');
+const { minifyCss, minifyJavaScript } = require('./utility');
 
 class Mimetype {
   #handlerFunction;
@@ -42,6 +42,9 @@ class Mimetype {
         case this.mimeTypes.css:
           this.#handlerFunction = this.handleCss;
           break;
+        case this.mimeTypes.js:
+          this.#handlerFunction = this.handleJs;
+          break;
 
         default:
           this.#handlerFunction = this.handleRaw;
@@ -53,7 +56,7 @@ class Mimetype {
     if (this.exist && typeof this.#handlerFunction === 'function') {
       const stats = statSync(this.filename);
       this.lastUpdated = stats.mtime;
-      const response = this.loadMime(this.filename , this.extension)
+      const response = this.loadMime(this.filename, this.extension)
       this.response.writeHead(200, { 'Content-Type': this.extension });
       this.response.end(response);
 
@@ -64,7 +67,7 @@ class Mimetype {
       return false;
     }
   }
-  loadMime(filename , ext) {
+  loadMime(filename, ext) {
     let response;
     const stats = statSync(this.filename);
     if (History.get(filename)) {
@@ -83,10 +86,15 @@ class Mimetype {
   }
 
   handleRaw(filedata) {
-    return filedata;
+    return filedata
   }
   handleCss(filedata) {
-    return filedata;
+    filedata = filedata.toString()
+    return minifyCss(filedata);
+  }
+  handleJs(filedata) {
+    filedata = filedata.toString()
+    return minifyJavaScript(filedata);
   }
 }
 
