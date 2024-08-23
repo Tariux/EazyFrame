@@ -1,11 +1,11 @@
 const { HTML } = require("../../core/render/HTML")
 
-class DPackge { 
+class HomePageController { 
     constructor() {
         this.init()
     }
     async init() {
-        this.page = await HTML.load('index' , true)
+        this.page = await HTML.load('home/index' , true)
     }
     
     async response() {
@@ -13,4 +13,4 @@ class DPackge {
     }
 }
 
-module.exports = DPackge
+module.exports = HomePageController

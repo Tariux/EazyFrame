@@ -1,11 +1,11 @@
 
 module.exports = (router) => {
-  router.addRoute('/a', {
-    module: 'APackageController',
+  router.addRoute('/', {
+    module: 'HomePageController',
     responseType: 'text/html',
   });
-  router.addRoute('/', {
-    module: 'DPackageController',
+  router.addRoute('/dashboard', {
+    module: 'DashboardPageController',
     responseType: 'text/html',
   });
 };

@@ -1,15 +1,16 @@
 module.exports = (app) => {
-  app.loadController('DPackageController', '../packages/DPackge');
+  app.loadController('DashboardPageController', '../packages/DashboardPageController');
+  app.loadController('HomePageController', '../packages/HomePageController');
   
-  app.loadController('APackageController', '../packages/APackge');
   app.loadPackage('BPackagePack', '../packages/BPackge');
   app.loadPackage('CPackagePack', '../packages/CPackge');
 
 
-  app.inject('APackageController', 'BPackagePack');
-  app.inject('APackageController', 'CPackagePack');
-  app.inject('DPackageController', 'BPackagePack');
+  app.inject('DashboardPageController', 'BPackagePack');
+  app.inject('HomePageController', 'BPackagePack');
 
+  app.inject('DashboardPageController', 'CPackagePack');
+  app.inject('HomePageController', 'CPackagePack');
 
 
 };
