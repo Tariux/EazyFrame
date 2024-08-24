@@ -126,12 +126,7 @@ https://templatemo.com/tm-586-scholar
                     <p>Access denied.</p>
                     {{ endif }}
 
-                    <!-- if-else conditional -->
-                    {{ if isLoggedIn }}
-                    <p>Welcome, {{ username }}!</p>
-                    {{ else }}
-                    <p>Please log in.</p>
-                    {{ endif }} {{ isObject items }} {{ foreach items as item }}
+ {{ isObject items }} {{ foreach items as item }}
                     <li>{{ name }} - {{ price }}</li>
                     {{ endforeach }} {{ endif }}
                     <!-- count function -->
