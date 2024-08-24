@@ -5,7 +5,7 @@ class HomePageController {
         this.init()
     }
     async init() {
-        this.page = await HTML.load('home/index' , true)
+        this.page = await HTML.load('home/index' , false)
     }
     
     async response() {

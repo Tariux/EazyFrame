@@ -1,6 +1,7 @@
 const routes = require('../app/routes');
 const loader = require('../app/loader');
 const { logThe } = require('../utility/Logger');
+const { TemplateEngine } = require('./render/TemplateEngine');
 
 /**
  * App class responsible for bootstrapping the application.
@@ -162,7 +163,7 @@ class App {
     const route = routes[request.url];
     if (!route.module || !this.#build[route.module]) {
       response.writeHead(400, {
-        'Content-Type': (route.responseType) ? route.responseType : 'text/plain',
+        'Content-Type': route.responseType ? route.responseType : 'text/plain',
       });
       response.end('Module not found');
       return;
@@ -172,10 +173,20 @@ class App {
 
     const moduleInstance = build.module;
     response.writeHead(200, {
-      'Content-Type': (route.responseType) ? route.responseType : 'text/plain',
+      'Content-Type': route.responseType ? route.responseType : 'text/plain',
     });
 
-    response.end(await moduleInstance.response());
+    const ControllerResponse = await moduleInstance.response();
+    if (typeof moduleInstance.share === 'function') {
+      const ControllerShare = await moduleInstance.share();
+      const ControllerTemplate = TemplateEngine.compile(
+        ControllerResponse,
+        ControllerShare
+      );
+      response.end(ControllerTemplate);
+    } else {
+      response.end(ControllerResponse);
+    }
   }
 
   /**
