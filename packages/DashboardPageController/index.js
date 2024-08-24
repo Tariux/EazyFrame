@@ -13,19 +13,22 @@ class DashboardPageController {
   }
   async share() {
     const data = {
-        isLoggedIn: true,
-        username: 'JohnDoe',
-        userRole: 'admin',
-        items: [
-          { name: 'Item 1', value: '10' },
-          { name: 'Item 2', value: '20' },
-        ],
-        hasNotifications: true,
-        isSubscribed: false,
-        messages: [],
-        userProfile: { name: 'John', age: 30 },
-      };
-      
+      isLoggedIn: true,
+      username: 'JohnDoe',
+      userRole: 'admin',
+      items: [
+        { name: 'Item 1', price: '$10' },
+        { name: 'Item 2', price: '$20' },
+      ],
+      hasNotifications: true,
+      isSubscribed: true,
+      messages: [],
+      userProfile: { name: 'John', age: 30 },
+      age: 20,
+      isAdmin: true,
+    
+    };
+
     return data;
   }
 }

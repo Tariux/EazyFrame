@@ -66,6 +66,8 @@ ul, li {
   padding: 0;
   margin: 0;
   list-style: none;
+  color: #f1f0fe;
+
 }
 
 header, nav, section, article, aside, footer, hgroup {

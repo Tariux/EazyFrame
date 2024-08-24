@@ -113,52 +113,27 @@ https://templatemo.com/tm-586-scholar
                   <span class="category">Our Courses</span>
                   <h4>Tools</h4>
                   <div>
+                    {{ if age >= 18 }}
+                    <p>You are an adult.</p>
+                    {{ elseif age < 18 }}
+                    <p>You are a minor.</p>
+                    {{ else }}
+                    <p>Age is unknown.</p>
+                    {{ endif }}
+                    {{ if isAdmin === true }}
+                    <p>Welcome, Admin!</p>
+                    {{ else }}
+                    <p>Access denied.</p>
+                    {{ endif }}
+
                     <!-- if-else conditional -->
-                    {{if isLoggedIn}}
-                    <p>Welcome, {{username}}!</p>
-                    {{else}}
+                    {{ if isLoggedIn }}
+                    <p>Welcome, {{ username }}!</p>
+                    {{ else }}
                     <p>Please log in.</p>
-                    {{endif}}
-
-                    <!-- if-elseif-else conditional -->
-                    {{if userRole === 'admin'}}
-                    <p>Admin Dashboard</p>
-                    {{elseif userRole === 'editor'}}
-                    <p>Editor Panel</p>
-                    {{else}}
-                    <p>General User Area</p>
-                    {{endif}}
-
-                    <!-- switch-case handling -->
-                    {{switch userRole}} {{case 'admin'}}
-                    <p>Admin Tools</p>
-                    {{case 'editor'}}
-                    <p>Editing Tools</p>
-                    {{case 'viewer'}}
-                    <p>View-Only Mode</p>
-                    {{endswitch}}
-
-                    <!-- foreach loop -->
-                    <ul>
-                      {{foreach items}}
-                      <li>{{name}}: {{value}}</li>
-                      {{endfor}}
-                    </ul>
-
-                    <!-- isTrue/isFalse checks -->
-                    {{if isTrue(hasNotifications)}}
-                    <p>You have new notifications!</p>
-                    {{endif}} {{if isFalse(isSubscribed)}}
-                    <p>Your subscription has expired. Please renew.</p>
-                    {{endif}}
-
-                    <!-- isEmpty and isObject handling -->
-                    {{if isEmpty(messages)}}
-                    <p>No new messages.</p>
-                    {{endif}} {{if isObject(userProfile)}}
-                    <p>User Profile Found</p>
-                    {{endif}}
-
+                    {{ endif }} {{ isObject items }} {{ foreach items as item }}
+                    <li>{{ name }} - {{ price }}</li>
+                    {{ endforeach }} {{ endif }}
                     <!-- count function -->
                     <p>Total items in cart: {{count(items)}}</p>
                   </div>
