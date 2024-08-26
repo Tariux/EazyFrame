@@ -1,8 +1,10 @@
 const { HTML } = require('../../core/render/HTML');
 
 class DashboardPageController {
-  constructor() {
+  constructor(deps) {
     this.init();
+    this.sqlite = deps.SQLitePackage
+
   }
   async init() {
     this.page = await HTML.load('dashboard/index', true);
@@ -26,6 +28,7 @@ class DashboardPageController {
       userProfile: { name: 'John', age: 30 },
       age: 20,
       isAdmin: true,
+      users: JSON.stringify(this.sqlite.query.user.getAll())
     
     };
 

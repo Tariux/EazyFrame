@@ -15,6 +15,8 @@ class Core {
     logThe('Core Loaded!');
     this.router = new Router();
     this.app = new App(this.router);
+    this.mime = new Mimetype();
+
   }
 
   /**
@@ -32,10 +34,9 @@ class Core {
      * @param {http.ServerResponse} res - The HTTP response.
      */
     const handleRequest = (req, res) => {
-      const mimeObject = new Mimetype(req.url, res);
       
-      if (mimeObject.exist) {
-        mimeObject.handle();
+      if (this.mime.check(req.url)) {
+        this.mime.handle(res);
       } else {
         logThe(req.url + ' ' + req.method, 'New Request!');
         this.app.run(req, res);

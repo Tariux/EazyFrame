@@ -65,22 +65,24 @@ class App {
    * @param {string} first - The key for the master.
    * @param {string} second - The key for the slave.
    */
-  inject(first, second) {
+  inject(first, second = false) {
     let master,
-      slave = false;
+    slave = false;
     if (this.#controllers[first]) {
       master = this.#controllers[first];
     } else if (this.#packages[first]) {
       master = this.#packages[first];
     }
 
-    if (this.#controllers[second]) {
-      slave = this.#controllers[second];
-    } else if (this.#packages[second]) {
-      slave = this.#packages[second];
+    if (second) {
+      if (this.#controllers[second]) {
+        slave = this.#controllers[second];
+      } else if (this.#packages[second]) {
+        slave = this.#packages[second];
+      }
     }
 
-    if (!master || !slave) {
+    if (!master) {
       throw new Error('WTF BRO?');
     }
 
@@ -126,10 +128,13 @@ class App {
 
       let deps = [];
       bundle.salves.map((slave) => {
-        const slaveModule = require(slave.module);
-        const slaveModuleObject = new slaveModule();
-        deps[slave.key] = slaveModuleObject;
-        logThe(`"${slave.key}" controller loaded!`);
+        if (slave.module) {
+          const slaveModule = require(slave.module);
+          const slaveModuleObject = new slaveModule();
+          deps[slave.key] = slaveModuleObject;
+          logThe(`"${slave.key}" controller loaded!`);
+  
+        }
       });
       const module = require(bundle.master.module);
       const moduleObject = new module(deps);

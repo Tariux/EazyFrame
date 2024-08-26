@@ -5,13 +5,8 @@ const { minifyCss, minifyJavaScript } = require('./utility');
 
 class Mimetype {
   #handlerFunction;
-  constructor(url, response) {
-    this.url = url;
-    this.response = response;
-    this.filename = __dirname + '/../../theme/' + url;
-    this.init();
-  }
-  init() {
+  constructor() {
+    
     this.mimeTypes = {
       // Start of Selection
       html: 'text/html',
@@ -24,18 +19,32 @@ class Mimetype {
       woff2: 'font/woff2',
       ttf: 'font/ttf',
     };
+  }
+  check(url) {
+    this.url = url;
+    this.filename = __dirname + '/../../theme/' + url;
+
+
     this.filesDependencies = this.url.match(
       /\.js|\.css|\.jpg|\.png|\.woff2|\.ttf|\.woff/
     );
     this.extension = this.filesDependencies
       ? this.mimeTypes[this.filesDependencies[0].toString().split('.')[1]]
       : false;
-
-    if (existsSync(this.filename) && this.extension) {
-      this.exist = true;
-    } else {
+    if (!this.extension) {
       this.exist = false;
+    } else {
+      if (existsSync(this.filename)) {
+        this.exist = true;
+      } else {
+        this.exist = false;
+      }
     }
+    return this.exist
+
+  }
+  initHandle(response) {
+    this.response = response;
 
     if (this.exist) {
       switch (this.extension) {
@@ -45,27 +54,27 @@ class Mimetype {
         case this.mimeTypes.js:
           this.#handlerFunction = this.handleJs;
           break;
-
         default:
           this.#handlerFunction = this.handleRaw;
           break;
       }
     }
   }
-  handle() {
+  handle(response) {
+    this.initHandle(response)
     if (this.exist && typeof this.#handlerFunction === 'function') {
-      const stats = statSync(this.filename);
-      this.lastUpdated = stats.mtime;
       const response = this.loadMime(this.filename, this.extension)
       this.response.writeHead(200, { 'Content-Type': this.extension });
       this.response.end(response);
-
       return true;
     } else {
-      this.response.writeHead(404, { 'Content-Type': 'text/html' });
-      this.response.end('404');
-      return false;
+      return this.notFound(this.response)
     }
+  }
+  notFound(response) {
+    response.writeHead(404, { 'Content-Type': 'text/html' });
+    response.end('404');
+    return false;
   }
   loadMime(filename, ext) {
     let response;

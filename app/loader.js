@@ -4,12 +4,11 @@ module.exports = (app) => {
   
   app.loadPackage('BPackagePack', '../packages/BPackge');
   app.loadPackage('CPackagePack', '../packages/CPackge');
+  app.loadPackage('SQLitePackage', '../packages/SQLitePackage');
 
+  app.inject('DashboardPageController' , 'SQLitePackage');
 
-  app.inject('DashboardPageController', 'BPackagePack');
   app.inject('HomePageController', 'BPackagePack');
-
-  app.inject('DashboardPageController', 'CPackagePack');
   app.inject('HomePageController', 'CPackagePack');
 
 
