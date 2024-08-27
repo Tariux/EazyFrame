@@ -5,18 +5,23 @@ const sqlite3 = require('sqlite3').verbose();
 
 class SQLitePackage {
   constructor() {
-    this.mainDatabasePath = __dirname + '/storage/main.db'
-    this.connect();
-    this.initQueries()
+    this.mainDatabasePath = __dirname + '/storage/main.db';
+    this.init()
   }
 
-  initQueries() {
+  async init() {
+    await this.connect();
+    await this.initQueries()
+
+  }
+
+  async initQueries() {
     this.query = {
         user: new UserQuery(this.db),
       }
   }
 
-  connect() {
+  async connect() {
     this.db = new sqlite3.Database(this.mainDatabasePath, (err) => {
       if (err) {
         return console.error(err.message);

@@ -1,7 +1,8 @@
 const routes = require('../app/routes');
 const loader = require('../app/loader');
 const { logThe } = require('../utility/Logger');
-const { TemplateEngine } = require('./render/TemplateEngine');
+// const { TemplateEngine } = require('./render/TemplateEngine');
+const Handlebars = require("handlebars");
 
 /**
  * App class responsible for bootstrapping the application.
@@ -181,14 +182,15 @@ class App {
       'Content-Type': route.responseType ? route.responseType : 'text/plain',
     });
 
-    const ControllerResponse = await moduleInstance.response();
+    const ControllerTemplate = await moduleInstance.response();
     if (typeof moduleInstance.share === 'function') {
       const ControllerShare = await moduleInstance.share();
-      const ControllerTemplate = TemplateEngine.compile(
-        ControllerResponse,
-        ControllerShare
-      );
-      response.end(ControllerTemplate);
+      // const ControllerTemplate = TemplateEngine.compile(
+      //   ControllerResponse,
+      //   ControllerShare
+      // );
+      const ControllerFinal = ControllerTemplate(ControllerShare)
+      response.end(ControllerFinal);
     } else {
       response.end(ControllerResponse);
     }

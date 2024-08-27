@@ -70,6 +70,11 @@ ul, li {
 
 }
 
+td , th , tr {
+  color: #f1f0fe;
+
+}
+
 header, nav, section, article, aside, footer, hgroup {
   display: block;
 }

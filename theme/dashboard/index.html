@@ -113,32 +113,49 @@ https://templatemo.com/tm-586-scholar
                   <span class="category">Our Courses</span>
                   <h4>Tools</h4>
                   <div>
-                    {{users}}
-                    {{ if age >= 18 }}
-                    <p>You are an adult.</p>
-                    {{ elseif age < 18 }}
-                    <p>You are a minor.</p>
-                    {{ else }}
-                    <p>Age is unknown.</p>
-                    {{ endif }}
-                    {{ if isAdmin === true }}
-                    <p>Welcome, Admin!</p>
-                    {{ else }}
-                    <p>Access denied.</p>
-                    {{ endif }}
-
- {{ isObject items }} {{ foreach items as item }}
-                    <li>{{ name }} - {{ price }}</li>
-                    {{ endforeach }} {{ endif }}
-                    <!-- count function -->
-                    <p>Total items in cart: {{count(items)}}</p>
+                    <p>{{username}}</p>
                   </div>
                 </div>
               </div>
               <div class="item item-2">
                 <div class="header-text">
-                  <span class="category">Best Result</span>
-                  <h4>Settings</h4>
+                  <h4>All Users</h4>
+                  <!-- Table Section -->
+                  <section class="table-section">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Username</th>
+                          <th>Email</th>
+                          <th>Age</th>
+                          <th>Address</th>
+                          <th>Phone Number</th>
+                          <th>Password</th>
+                          <th>Created At</th>
+                          <th>Updated At</th>
+                          <th>Created By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{ id }}</td>
+                          <td>{{ $$user.name }}</td>
+                          <td>{{ $user.username }}</td>
+                          <td>{{ $user.email }}</td>
+                          <td>{{ $user.age }}</td>
+                          <td>{{ $user.address }}</td>
+                          <td>{{ $user.phone }}</td>
+                          <td>{{ $user.password }}</td>
+                          <td>{{ $user.created_at }}</td>
+                          <td>{{ $user.updated_at }}</td>
+                          <td>{{ $user.role }}</td>
+                        </tr>
+                        <!-- Repeat rows as needed -->
+                      </tbody>
+                    </table>
+                  </section>
                 </div>
               </div>
             </div>

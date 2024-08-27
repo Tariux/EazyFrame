@@ -3,6 +3,7 @@ const { logThe } = require('../../utility/Logger');
 const { minify } = require('html-minifier');
 const { History } = require('../../storage/history');
 const { minifyHtml } = require('./utility');
+const Handlebars = require("handlebars");
 
 class HTML {
   static minify(html) {
@@ -17,7 +18,7 @@ class HTML {
     });
   }
   static async load(filename, minify = false) {
-    let filedata
+    let filedata,finalResponse
     if (History.get(filename)) {
       logThe(filename + ' theme called from cache');
       filedata = History.get(filename).data;
@@ -30,13 +31,16 @@ class HTML {
     }
 
     if (minify) {
-      return minifyHtml(filedata.toString())
-
+      finalResponse = minifyHtml(filedata.toString())
     } else {
-      return filedata.toString()
-
+      finalResponse =  filedata.toString()
     }
 
+    if (finalResponse) {
+      return Handlebars.compile(finalResponse)
+    } else {
+      return ''
+    }
 
   }
 }

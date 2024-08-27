@@ -28,7 +28,7 @@ class DashboardPageController {
       userProfile: { name: 'John', age: 30 },
       age: 20,
       isAdmin: true,
-      users: JSON.stringify(this.sqlite.query.user.getAll())
+      users: await this.sqlite.query.user.getAll()
     
     };
 
