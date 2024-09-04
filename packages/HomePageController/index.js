@@ -11,6 +11,11 @@ class HomePageController {
     async response() {
         return this.page
     }
+    async share() {
+        return {
+            
+        }
+    }
 }
 
 module.exports = HomePageController

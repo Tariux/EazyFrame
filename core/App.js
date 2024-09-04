@@ -181,19 +181,24 @@ class App {
     response.writeHead(200, {
       'Content-Type': route.responseType ? route.responseType : 'text/plain',
     });
-
-    const ControllerTemplate = await moduleInstance.response();
+    let ControllerFinal, ControllerShare
+    const ControllerResponse = await moduleInstance.response();
+    
     if (typeof moduleInstance.share === 'function') {
-      const ControllerShare = await moduleInstance.share();
-      // const ControllerTemplate = TemplateEngine.compile(
-      //   ControllerResponse,
-      //   ControllerShare
-      // );
-      const ControllerFinal = ControllerTemplate(ControllerShare)
-      response.end(ControllerFinal);
+      ControllerShare = await moduleInstance.share();
     } else {
-      response.end(ControllerResponse);
+      ControllerShare = {}
+      ControllerFinal = ControllerResponse
     }
+
+    if (typeof ControllerResponse === 'function') {
+      ControllerFinal = ControllerResponse(ControllerShare)      
+    } else {
+      ControllerFinal = ControllerResponse      
+    }
+
+    response.end(ControllerFinal);
+    
   }
 
   /**

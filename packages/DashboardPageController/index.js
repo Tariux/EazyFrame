@@ -14,6 +14,8 @@ class DashboardPageController {
     return this.page;
   }
   async share() {
+    const users = await this.sqlite.query.user.getAll();
+    console.log('XXX' , users );
     const data = {
       isLoggedIn: true,
       username: 'JohnDoe',
@@ -23,12 +25,12 @@ class DashboardPageController {
         { name: 'Item 2', price: '$20' },
       ],
       hasNotifications: true,
-      isSubscribed: true,
+      isSubscribed: true, 
       messages: [],
       userProfile: { name: 'John', age: 30 },
       age: 20,
       isAdmin: true,
-      users: await this.sqlite.query.user.getAll()
+      users: [users]
     
     };
 

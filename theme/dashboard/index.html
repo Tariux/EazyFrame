@@ -139,20 +139,21 @@ https://templatemo.com/tm-586-scholar
                         </tr>
                       </thead>
                       <tbody>
+                        {{#each users}}
                         <tr>
-                          <td>{{ id }}</td>
-                          <td>{{ $$user.name }}</td>
-                          <td>{{ $user.username }}</td>
-                          <td>{{ $user.email }}</td>
-                          <td>{{ $user.age }}</td>
-                          <td>{{ $user.address }}</td>
-                          <td>{{ $user.phone }}</td>
-                          <td>{{ $user.password }}</td>
-                          <td>{{ $user.created_at }}</td>
-                          <td>{{ $user.updated_at }}</td>
-                          <td>{{ $user.role }}</td>
+                          <td>{{this.id}}</td>
+                          <td>{{this.name}}</td>
+                          <td>{{this.username}}</td>
+                          <td>{{this.email}}</td>
+                          <td>{{this.age}}</td>
+                          <td>{{this.address}}</td>
+                          <td>{{this.phone}}</td>
+                          <td>{{this.password}}</td>
+                          <td>{{this.created_at}}</td>
+                          <td>{{this.updated_at}}</td>
+                          <td>{{this.role}}</td>
                         </tr>
-                        <!-- Repeat rows as needed -->
+                        {{/each}}
                       </tbody>
                     </table>
                   </section>
