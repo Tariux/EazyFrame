@@ -4,7 +4,7 @@ const Query = require("./query");
  * Represents a query for user-related operations in the database.
  * @extends Query
  */
-class TaskQuery  extends Query {
+export default class TaskQuery extends Query {
 
   constructor(db) {
     const table = 'tasks';
@@ -25,5 +25,3 @@ class TaskQuery  extends Query {
     super(db, schema, table);
   }
 }
-
-module.exports = TaskQuery;

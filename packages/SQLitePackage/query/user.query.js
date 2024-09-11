@@ -4,7 +4,7 @@ const Query = require("./query");
  * Represents a query for user-related operations in the database.
  * @extends Query
  */
-class UserQuery extends Query {
+export default class UserQuery extends Query {
 
 
   constructor(db) {
@@ -29,5 +29,3 @@ class UserQuery extends Query {
   }
 
 }
-
-module.exports = UserQuery;

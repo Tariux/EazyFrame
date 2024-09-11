@@ -1,4 +1,4 @@
-const { HTML } = require("../../core/render/HTML")
+import HTML from '../../core/render/HTML.js';
 
 class HomePageController { 
     constructor() {
@@ -18,4 +18,4 @@ class HomePageController {
     }
 }
 
-module.exports = HomePageController
+export default HomePageController;

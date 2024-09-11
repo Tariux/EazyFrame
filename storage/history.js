@@ -24,4 +24,4 @@ class History {
 const HistoryZone = new History();
 Object.freeze(HistoryZone);
 
-exports.History = HistoryZone;
+export { HistoryZone as History };

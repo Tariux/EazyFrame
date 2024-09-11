@@ -1,9 +1,9 @@
-const { logThe } = require("../utility/Logger");
+import { logThe } from "../utility/Logger.js";
 
 /**
  * Router class responsible for managing routes and handling requests.
  */
-class Router {
+export class Router {
   /**
    * Private property to store the routes.
    * @private
@@ -84,4 +84,4 @@ class Router {
   }
 }
 
-module.exports = Router;
+export default Router;

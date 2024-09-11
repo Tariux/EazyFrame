@@ -1,13 +1,13 @@
-const { logThe } = require('../utility/Logger');
-const App = require('./App');
-const Router = require('./Router');
-const http = require('http');
-const Mimetype = require('./render/Mimetype');
+import { logThe } from '../utility/Logger.js';
+import App from './App.js';
+import Router from './Router.js';
+import http from 'http';
+import Mimetype from './render/Mimetype.js';
 
 /**
  * Core class responsible for bootstrapping the application.
  */
-class Core {
+export default class Core {
   /**
    * Constructor method that initializes the Core instance.
    */
@@ -54,5 +54,3 @@ class Core {
     });
   }
 }
-
-module.exports = Core;

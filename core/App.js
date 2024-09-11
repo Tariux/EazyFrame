@@ -1,8 +1,8 @@
-const routes = require('../app/routes');
-const loader = require('../app/loader');
-const { logThe } = require('../utility/Logger');
-// const { TemplateEngine } = require('./render/TemplateEngine');
-const Handlebars = require("handlebars");
+import routes from '../app/routes.js';
+import loader from '../app/loader.js';
+import { logThe } from '../utility/Logger.js';
+// import { TemplateEngine } from './render/TemplateEngine';
+import Handlebars from "handlebars";
 
 /**
  * App class responsible for bootstrapping the application.
@@ -24,15 +24,16 @@ class App {
     this.router = router;
     this.init();
 
-    this.load();
   }
 
   /**
    * Method to initialize the app.
    */
-  init() {
+  async init() {
     routes(this.router);
     loader(this);
+    await this.load();
+
   }
 
   /**
@@ -102,7 +103,7 @@ class App {
   /**
    * Method to load the app.
    */
-  load() {
+  async load() {
     logThe('Loading app started');
     const allRoutes = this.router.getRoutes();
     for (
@@ -127,18 +128,53 @@ class App {
         }
       }
 
+
+
+
+
       let deps = [];
-      bundle.salves.map((slave) => {
+      bundle.salves.map( async (slave) => {
         if (slave.module) {
-          const slaveModule = require(slave.module);
-          const slaveModuleObject = new slaveModule();
+
+          let slaveModuleObject = false
+          let SlaveModule = await import(slave.module)
+          .then((module) => {
+            return module.default;
+          })
+          .catch((error) => {
+            console.error('Error loading module:', error);
+            return null;
+          });
+    
+    
+          if (Module) {
+            moduleObject = new Module();
+          } else {
+            console.error('Failed to load module');
+          }
+
           deps[slave.key] = slaveModuleObject;
           logThe(`"${slave.key}" controller loaded!`);
   
         }
       });
-      const module = require(bundle.master.module);
-      const moduleObject = new module(deps);
+
+      let moduleObject = false
+      let Module = await import(bundle.master.module , deps)
+      .then((module) => {
+        return module.default;
+      })
+      .catch((error) => {
+        console.error('Error loading module:', error);
+        return null;
+      });
+
+      if (Module) {
+        moduleObject = new Module();
+      } else {
+        console.error('Failed to load module');
+      }
+
       logThe(`"${bundle.name}" package loaded!`);
 
       this.#build[bundle.name] = {
@@ -147,7 +183,15 @@ class App {
       };
     }
   }
-
+  loadJs = ( path , deps) => {
+    return new Promise( resolve => {
+      import(`${path}` , deps)
+      .then((module) => {
+        resolve(module.default)
+      })
+    })
+  }
+  
   /**
    * Method to run the app.
    * @param {http.IncomingMessage} request - The incoming HTTP request.
@@ -216,4 +260,4 @@ class App {
   }
 }
 
-module.exports = App;
+export default App;

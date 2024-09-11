@@ -1,5 +1,4 @@
-
-module.exports = (router) => {
+export default function routes(router) {
   router.addRoute('/', {
     module: 'HomePageController',
     responseType: 'text/html',
@@ -8,4 +7,8 @@ module.exports = (router) => {
     module: 'DashboardPageController',
     responseType: 'text/html',
   });
-};
+  router.addRoute('/bench', {
+    module: 'BenchPageController',
+    responseType: 'text/html',
+  });
+}

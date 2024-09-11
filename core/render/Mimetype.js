@@ -1,7 +1,7 @@
-const { readFileSync, existsSync, statSync } = require('fs');
-const { History } = require('../../storage/history');
-const { logThe } = require('../../utility/Logger');
-const { minifyCss, minifyJavaScript } = require('./utility');
+import { readFileSync, existsSync, statSync } from 'fs';
+import { History } from '../../storage/history.js';
+import { logThe } from '../../utility/Logger.js';
+import { minifyCss, minifyJavaScript } from './utility.js';
 
 class Mimetype {
   #handlerFunction;
@@ -22,7 +22,7 @@ class Mimetype {
   }
   check(url) {
     this.url = url;
-    this.filename = __dirname + '/../../theme/' + url;
+    this.filename =  '../../theme/' + url;
 
 
     this.filesDependencies = this.url.match(
@@ -79,7 +79,10 @@ class Mimetype {
   loadMime(filename, ext) {
     let response;
     const stats = statSync(this.filename);
-    if (History.get(filename)) {
+    console.log('xxx' , this.filename);
+
+    if (false) { // enable or disable cache here
+      // if (History.get(filename)) {
       logThe(ext + ' called from cache');
       response = History.get(filename).data;
     } else {
@@ -107,4 +110,4 @@ class Mimetype {
   }
 }
 
-module.exports = Mimetype;
+export default Mimetype;

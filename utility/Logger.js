@@ -1,4 +1,4 @@
-function logThe(title , data = false , flag = false) {
+export function logThe(title , data = false , flag = false) {
     if (flag === false) {
         if (data instanceof Error) {
             flag = '[✕]'
@@ -10,8 +10,4 @@ function logThe(title , data = false , flag = false) {
     }
     let prefix = `${flag} ${title} at ${new Date().toLocaleString()}`
     console.log(prefix , (data) ? data : '');
-}
-
-module.exports = {
-    logThe
 }

@@ -1,11 +1,11 @@
-const { readFileSync } = require('fs');
-const { logThe } = require('../../utility/Logger');
-const { minify } = require('html-minifier');
-const { History } = require('../../storage/history');
-const { minifyHtml } = require('./utility');
-const Handlebars = require("handlebars");
+import { readFileSync } from 'fs';
+import { logThe } from '../../utility/Logger.js';
+import { minify } from 'html-minifier';
+import { History } from '../../storage/history.js';
+import { minifyHtml } from './utility.js';
+import Handlebars from "handlebars";
 
-class HTML {
+export default class HTML {
   static minify(html) {
     return minify(html, {
       collapseWhitespace: true,
@@ -19,7 +19,8 @@ class HTML {
   }
   static async load(filename, minify = false) {
     let filedata,finalResponse
-    if (History.get(filename)) {
+    if (false) { // enable or disable cache here
+      // if (History.get(filename)) {
       logThe(filename + ' theme called from cache');
       filedata = History.get(filename).data;
     } else {
@@ -44,7 +45,3 @@ class HTML {
 
   }
 }
-
-module.exports = {
-  HTML,
-};
