@@ -2,11 +2,17 @@ import { readFileSync, existsSync, statSync } from 'fs';
 import { History } from '../../storage/history.js';
 import { logThe } from '../../utility/Logger.js';
 import { minifyCss, minifyJavaScript } from './utility.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 class Mimetype {
   #handlerFunction;
   constructor() {
-    
+    this.__filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+
+this.__dirname = path.dirname(this.__filename); // get the name of the directory
+
     this.mimeTypes = {
       // Start of Selection
       html: 'text/html',
@@ -22,8 +28,7 @@ class Mimetype {
   }
   check(url) {
     this.url = url;
-    this.filename =  '../../theme/' + url;
-
+    this.filename =  path.join(this.__dirname ,'../../theme' + url);
 
     this.filesDependencies = this.url.match(
       /\.js|\.css|\.jpg|\.png|\.woff2|\.ttf|\.woff/
